@@ -34,7 +34,10 @@ class PostController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        $post = Post::create($request->all());
+        $post          = new Post();
+        $post->title   = $request->input("title");
+        $post->content = $request->input("content");
+        $post->save();
 
         return response()->json($post);
     }
@@ -61,9 +64,11 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post): JsonResponse
     {
-        $post->update($request->all());
+        $post->title   = $request->input("title");
+        $post->content = $request->input("content");
+        $post->save();
 
-        return response()->json(["status" => "updated"]);
+        return response()->json($post);
     }
 
     /**
