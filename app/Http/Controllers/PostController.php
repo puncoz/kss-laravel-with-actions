@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreatePostAction;
+use App\Actions\DeletePostAction;
+use App\Actions\UpdatePostAction;
+use App\Http\Requests\PostRequest;
 use App\Post;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class PostController
@@ -28,16 +31,14 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param CreatePostAction $action
+     * @param PostRequest      $request
      *
      * @return JsonResponse
      */
-    public function create(Request $request): JsonResponse
+    public function create(CreatePostAction $action, PostRequest $request): JsonResponse
     {
-        $post          = new Post();
-        $post->title   = $request->input("title");
-        $post->content = $request->input("content");
-        $post->save();
+        $post = $action->execute($request->all());
 
         return response()->json($post);
     }
@@ -57,16 +58,15 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param Post    $post
+     * @param UpdatePostAction $action
+     * @param PostRequest      $request
+     * @param Post             $post
      *
      * @return JsonResponse
      */
-    public function update(Request $request, Post $post): JsonResponse
+    public function update(UpdatePostAction $action, PostRequest $request, Post $post): JsonResponse
     {
-        $post->title   = $request->input("title");
-        $post->content = $request->input("content");
-        $post->save();
+        $post = $action->execute($request->all(), $post);
 
         return response()->json($post);
     }
@@ -74,14 +74,15 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Post $post
+     * @param DeletePostAction $action
+     * @param Post             $post
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(Post $post): JsonResponse
+    public function destroy(DeletePostAction $action, Post $post): JsonResponse
     {
-        $post->delete();
+        $action->execute($post);
 
         return response()->json(["status" => "deleted"]);
     }
