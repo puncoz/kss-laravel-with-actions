@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendTweet;
+use App\Actions\PublishPostAction;
 use App\Post;
 
 /**
@@ -14,15 +14,14 @@ class PublishPostController extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param Post $post
+     * @param PublishPostAction $action
+     * @param Post              $post
      *
      * @return void
      */
-    public function __invoke(Post $post)
+    public function __invoke(PublishPostAction $action, Post $post)
     {
-        $post->markAsPublished();
-
-        dispatch(new SendTweet($post->title));
+        $action->execute($post);
 
         return response()->json(["status" => "published"]);
     }
