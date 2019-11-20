@@ -26,4 +26,14 @@ class Post extends Model
         "content",
         "status",
     ];
+
+    /**
+     * Publish the post
+     */
+    public function markAsPublished()
+    {
+        $this->status = "published";
+
+        $this->save();
+    }
 }

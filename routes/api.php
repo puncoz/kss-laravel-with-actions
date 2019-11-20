@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PublishPostController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -30,5 +31,7 @@ Route::group(
         $router->get("/{post}", "PostController@show");
         $router->patch("/{post}", "PostController@update");
         $router->delete("/{post}", "PostController@destroy");
+
+        $router->post("/{post}/publish", "PublishPostController");
     }
 );
