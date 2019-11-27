@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\PublishPostController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,22 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get(
+    '/user',
+    function (Request $request) {
+        return $request->user();
+    }
+);
+
+Route::group(
+    ["prefix" => "/posts"],
+    function (Router $router) {
+        $router->get("/", "PostController@index");
+        $router->post("/", "PostController@create");
+        $router->get("/{post}", "PostController@show");
+        $router->patch("/{post}", "PostController@update");
+        $router->delete("/{post}", "PostController@destroy");
+
+        $router->post("/{post}/publish", "PublishPostController");
+    }
+);
